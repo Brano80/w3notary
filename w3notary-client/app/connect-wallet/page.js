@@ -1,10 +1,11 @@
-export const dynamic = "force-dynamic"; // force dynamic rendering
+import dynamic from "next/dynamic";
 
-"use client"; // ensure this is a client component
+// ✅ Load the Connect Wallet page on the client only (no SSR)
+const ClientOnlyWalletPage = dynamic(() => import("../../components/ConnectWalletPage"), {
+  ssr: false,
+});
 
-import ConnectWallet from "../../components/ConnectWallet";
-
-export default function ConnectWalletPage() {
-  return <ConnectWallet />;
+export default function Page() {
+  return <ClientOnlyWalletPage />;
 }
 
