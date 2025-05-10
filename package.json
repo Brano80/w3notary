@@ -1,0 +1,22 @@
+{
+  "name": "w3notary-monorepo",
+  "private": true,
+  "packageManager": "npm@11.3.0",
+  "version": "0.1.0",
+  "workspaces": [
+    "w3notary-client",
+    "w3notary-api",
+    "w3notary-contracts",
+    "w3notary-zk"
+  ],
+  "scripts": {
+    "dev":   "turbo run dev --parallel",
+    "build": "turbo run build",
+    "test":  "turbo run test",
+    "lint":  "turbo run lint"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.2"
+  }
+}
+
