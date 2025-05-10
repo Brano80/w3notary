@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Optional global styles for W3Notary */
 body {
-  @apply bg-gradient-to-b from-[#3b5998] to-[#192f6a] text-white;
+  @apply bg-gradient-to-b from-[#3b5998] to-[#192f6a] text-white font-sans;
+}
+
+h1, h2, h3, h4 {
+  @apply font-bold;
 }
