@@ -1,27 +1,34 @@
-```javascript
-// Import the required modules
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
 describe("MultiChainNotarizer", function () {
-
-  let multiChainNotarizer;
+  let owner, addr1, notarizer;
 
   beforeEach(async function () {
-    // Deploy contract
-    const MultiChainNotarizer = await ethers.getContractFactory("MultiChainNotarizer");
-    multiChainNotarizer = await MultiChainNotarizer.deploy();
-    await multiChainNotarizer.deployed();
+    [owner, addr1] = await ethers.getSigners();
+    const Notarizer = await ethers.getContractFactory("MultiChainNotarizer");
+    notarizer = await Notarizer.deploy(owner.address);
   });
 
-  // test cases for each method in the contract
-
-  describe("test case template", function () {
-    it("should do something", async function () {
-      // logic for test case
-    });
+  it("Owner can notarize a document", async function () {
+    const docHash = ethers.encodeBytes32String("doc1");
+    await expect(notarizer.notarize(docHash))
+      .to.emit(notarizer, "DocumentNotarized");
+    const timestamp = await notarizer.getTimestamp(docHash);
+    expect(timestamp).to.be.gt(0);
   });
 
+  it("Non-owner cannot notarize", async function () {
+    const docHash = ethers.encodeBytes32String("doc2");
+    await expect(
+      notarizer.connect(addr1).notarize(docHash)
+    ).to.be.revertedWithCustomError(notarizer, "OwnableUnauthorizedAccount");
+  });
+
+  it("Cannot notarize the same hash twice", async function () {
+    const docHash = ethers.encodeBytes32String("doc3");
+    await notarizer.notarize(docHash);
+    await expect(notarizer.notarize(docHash)).to.be.revertedWith("Already notarized");
+  });
 });
-```
-Make sure to replace the placeholders (like "should do something") with your actual test logic and descriptions. Also, add as many test cases as there are methods in your contract for comprehensive testing. This is just a template so you will need to customize the logic to fit your needs.
+
